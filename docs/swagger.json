@@ -245,7 +245,7 @@
                     "204": {
                         "description": "Successfully deleted account",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/models.Account"
                         }
                     },
                     "404": {

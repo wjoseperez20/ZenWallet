@@ -256,7 +256,7 @@ const docTemplate = `{
                     "204": {
                         "description": "Successfully deleted account",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/models.Account"
                         }
                     },
                     "404": {
@@ -464,6 +464,8 @@ var SwaggerInfo = &swag.Spec{
 	Description:      "",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
+	LeftDelim:        "{{",
+	RightDelim:       "}}",
 }
 
 func init() {
