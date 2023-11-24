@@ -11,7 +11,7 @@ require (
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/swaggo/files v1.0.1
 	github.com/swaggo/gin-swagger v1.6.0
-	github.com/swaggo/swag v1.8.12
+	github.com/swaggo/swag v1.16.2
 	golang.org/x/crypto v0.15.0
 	golang.org/x/time v0.4.0
 	gorm.io/driver/postgres v1.5.4
