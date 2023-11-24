@@ -26,12 +26,77 @@ definitions:
     - client
     - email
     type: object
+  models.CreateTransaction:
+    properties:
+      account:
+        type: integer
+      amount:
+        type: number
+      date:
+        type: string
+    required:
+    - account
+    - amount
+    - date
+    type: object
+  models.File:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      location:
+        type: string
+      name:
+        type: string
+      output:
+        type: string
+      processed:
+        type: integer
+      updated_at:
+        type: string
+    type: object
+  models.Transaction:
+    properties:
+      account:
+        type: integer
+      amount:
+        type: number
+      created_at:
+        type: string
+      date:
+        type: string
+      id:
+        type: integer
+      updated_at:
+        type: string
+    type: object
   models.UpdateAccount:
     properties:
       client:
         type: string
       email:
         type: string
+    type: object
+  models.UpdateTransaction:
+    properties:
+      account:
+        type: integer
+      amount:
+        type: number
+      date:
+        type: string
+    required:
+    - account
+    - amount
+    - date
+    type: object
+  models.UploadFile:
+    properties:
+      name:
+        type: string
+    required:
+    - name
     type: object
   models.User:
     properties:
@@ -50,7 +115,7 @@ definitions:
 info:
   contact: {}
 paths:
-  /:
+  /_:
     get:
       consumes:
       - application/json
@@ -89,7 +154,7 @@ paths:
               $ref: '#/definitions/models.Account'
             type: array
       security:
-      - ApiKeyAuth: []
+      - JwtAuth: []
       summary: Get all accounts with pagination
       tags:
       - Accounts
@@ -120,7 +185,6 @@ paths:
           schema:
             type: string
       security:
-      - ApiKeyAuth: []
       - JwtAuth: []
       summary: Create a new account
       tags:
@@ -146,7 +210,7 @@ paths:
           schema:
             type: string
       security:
-      - ApiKeyAuth: []
+      - JwtAuth: []
       summary: Delete an account by ID
       tags:
       - Accounts
@@ -170,7 +234,7 @@ paths:
           schema:
             type: string
       security:
-      - ApiKeyAuth: []
+      - JwtAuth: []
       summary: Find an account by ID
       tags:
       - Accounts
@@ -206,10 +270,125 @@ paths:
           schema:
             type: string
       security:
-      - ApiKeyAuth: []
+      - JwtAuth: []
       summary: Update an account by ID
       tags:
       - Accounts
+  /emails:
+    post:
+      consumes:
+      - application/json
+      responses:
+        "200":
+          description: Emails sent successfully
+          schema:
+            type: string
+      security:
+      - JWTAuth: []
+      summary: Send account to All accounts
+      tags:
+      - Emails
+  /emails/{email}:
+    post:
+      consumes:
+      - application/json
+      responses:
+        "200":
+          description: Email sent successfully
+          schema:
+            type: string
+      security:
+      - JwtAuth: []
+      summary: Send account statement by Email
+      tags:
+      - Emails
+  /files:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of all files with optional pagination
+      parameters:
+      - default: 0
+        description: Offset for pagination
+        in: query
+        name: offset
+        type: integer
+      - default: 10
+        description: Limit for pagination
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully retrieved list of files
+          schema:
+            items:
+              $ref: '#/definitions/models.File'
+            type: array
+      security:
+      - JwtAuth: []
+      summary: Get all files with pagination
+      tags:
+      - Files
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Upload file
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.UploadFile'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Successfully created file
+          schema:
+            $ref: '#/definitions/models.File'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+      security:
+      - JwtAuth: []
+      summary: Upload a new file
+      tags:
+      - Files
+  /files/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get details of a file by its ID
+      parameters:
+      - description: File ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully retrieved file
+          schema:
+            $ref: '#/definitions/models.File'
+        "404":
+          description: File not found
+          schema:
+            type: string
+      security:
+      - JwtAuth: []
+      summary: Find file by ID
+      tags:
+      - Files
   /login:
     post:
       consumes:
@@ -279,4 +458,148 @@ paths:
       summary: Register a new user
       tags:
       - User
+  /transactions:
+    get:
+      description: Get a list of all transactions with optional pagination
+      parameters:
+      - default: 0
+        description: Offset for pagination
+        in: query
+        name: offset
+        type: integer
+      - default: 10
+        description: Limit for pagination
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully retrieved list of transactions
+          schema:
+            items:
+              $ref: '#/definitions/models.Transaction'
+            type: array
+      security:
+      - JwtAuth: []
+      summary: Get all transactions with pagination
+      tags:
+      - Transactions
+    post:
+      consumes:
+      - application/json
+      description: Create a new transaction with the given input data
+      parameters:
+      - description: Create transaction object
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateTransaction'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Successfully created transaction
+          schema:
+            $ref: '#/definitions/models.Transaction'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+      security:
+      - JwtAuth: []
+      summary: Create a new transaction
+      tags:
+      - Transactions
+  /transactions/{id}:
+    delete:
+      description: Delete the transaction with the given ID
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Successfully deleted transaction
+          schema:
+            $ref: '#/definitions/models.Transaction'
+        "404":
+          description: transaction not found
+          schema:
+            type: string
+      security:
+      - JwtAuth: []
+      summary: Delete a transaction by ID
+      tags:
+      - Transactions
+    get:
+      description: Get details of a transaction by its ID
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully retrieved transaction
+          schema:
+            $ref: '#/definitions/models.Transaction'
+        "404":
+          description: Transaction not found
+          schema:
+            type: string
+      security:
+      - JwtAuth: []
+      summary: Find a transaction by ID
+      tags:
+      - Transactions
+    put:
+      consumes:
+      - application/json
+      description: Update the transaction details for the given ID
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Update transaction object
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateTransaction'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully updated transaction
+          schema:
+            $ref: '#/definitions/models.Transaction'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: transaction not found
+          schema:
+            type: string
+      security:
+      - JwtAuth: []
+      summary: Update a transaction by ID
+      tags:
+      - Transactions
 swagger: "2.0"

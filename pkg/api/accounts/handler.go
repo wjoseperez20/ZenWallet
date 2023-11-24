@@ -19,7 +19,7 @@ import (
 // @Summary Find an account by ID
 // @Description Get details of an account by its ID
 // @Tags Accounts
-// @Security ApiKeyAuth
+// @Security JwtAuth
 // @Produce json
 // @Param id path string true "Account ID"
 // @Success 200 {object} models.Account "Successfully retrieved account"
@@ -40,7 +40,7 @@ func FindAccount(c *gin.Context) {
 // @Summary Get all accounts with pagination
 // @Description Get a list of all accounts with optional pagination
 // @Tags Accounts
-// @Security ApiKeyAuth
+// @Security JwtAuth
 // @Produce json
 // @Param offset query int false "Offset for pagination" default(0)
 // @Param limit query int false "Limit for pagination" default(10)
@@ -105,7 +105,6 @@ func FindAccounts(c *gin.Context) {
 // @Summary Create a new account
 // @Description Create a new account with the given input data
 // @Tags Accounts
-// @Security ApiKeyAuth
 // @Security JwtAuth
 // @Accept  json
 // @Produce  json
@@ -142,7 +141,7 @@ func CreateAccount(c *gin.Context) {
 // @Summary Update an account by ID
 // @Description Update the account details for the given ID
 // @Tags Accounts
-// @Security ApiKeyAuth
+// @Security JwtAuth
 // @Accept  json
 // @Produce  json
 // @Param id path string true "Account ID"
@@ -174,7 +173,7 @@ func UpdateAccount(c *gin.Context) {
 // @Summary Delete an account by ID
 // @Description Delete the account with the given ID
 // @Tags Accounts
-// @Security ApiKeyAuth
+// @Security JwtAuth
 // @Produce json
 // @Param id path string true "Account ID"
 // @Success 204 {object} models.Account "Successfully deleted account"

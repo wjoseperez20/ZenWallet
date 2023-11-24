@@ -3,8 +3,11 @@ package api
 import (
 	"github.com/wjoseperez20/zenwallet/docs"
 	"github.com/wjoseperez20/zenwallet/pkg/api/accounts"
+	emails "github.com/wjoseperez20/zenwallet/pkg/api/email"
+	"github.com/wjoseperez20/zenwallet/pkg/api/files"
 	"github.com/wjoseperez20/zenwallet/pkg/api/healtcheck"
-	"github.com/wjoseperez20/zenwallet/pkg/auth"
+	"github.com/wjoseperez20/zenwallet/pkg/api/transactions"
+	"github.com/wjoseperez20/zenwallet/pkg/api/users"
 	"github.com/wjoseperez20/zenwallet/pkg/middleware"
 	"time"
 
@@ -28,17 +31,39 @@ func InitRouter() *gin.Engine {
 	docs.SwaggerInfo.BasePath = "/api/v1"
 	v1 := r.Group("/api/v1")
 	{
-		v1.GET("/", healtcheck.Healthcheck)
-		v1.POST("/login", middleware.APIKeyAuth(), auth.LoginHandler)
-		v1.POST("/register", middleware.APIKeyAuth(), auth.RegisterHandler)
+		v1.GET("/_", healtcheck.Healthcheck)
+		v1.POST("/login", middleware.APIKeyAuth(), users.LoginUser)
+		v1.POST("/register", middleware.APIKeyAuth(), users.RegisterUser)
 
 		account := v1.Group("/accounts")
 		{
 			account.GET("/", middleware.JWTAuth(), accounts.FindAccounts)
-			account.POST("/", middleware.JWTAuth(), accounts.CreateAccount)
 			account.GET("/:id", middleware.JWTAuth(), accounts.FindAccount)
+			account.POST("/", middleware.JWTAuth(), accounts.CreateAccount)
 			account.PUT(":id", middleware.JWTAuth(), accounts.UpdateAccount)
 			account.DELETE(":id", middleware.JWTAuth(), accounts.DeleteAccount)
+		}
+
+		transaction := v1.Group("/transactions")
+		{
+			transaction.GET("/", middleware.JWTAuth(), transactions.FindTransactions)
+			transaction.GET("/:id", middleware.JWTAuth(), transactions.FindTransaction)
+			transaction.POST("/", middleware.JWTAuth(), transactions.CreateTransaction)
+			transaction.PUT(":id", middleware.JWTAuth(), transactions.UpdateTransaction)
+			transaction.DELETE(":id", middleware.JWTAuth(), transactions.DeleteTransaction)
+		}
+
+		file := v1.Group("/files")
+		{
+			file.GET("/", middleware.JWTAuth(), files.FindFiles)
+			file.GET("/:id", middleware.JWTAuth(), files.FindFile)
+			file.POST("/", middleware.JWTAuth(), files.UploadFile)
+		}
+
+		email := v1.Group("/emails")
+		{
+			email.POST("/", middleware.JWTAuth(), emails.SendEmails)
+			email.POST("/:email", middleware.JWTAuth(), emails.SendEmail)
 		}
 	}
 

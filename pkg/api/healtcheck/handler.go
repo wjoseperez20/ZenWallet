@@ -15,7 +15,7 @@ import (
 // @Accept json
 // @Produce json
 // @Success 200 {string} ok
-// @Router / [get]
+// @Router /_ [get]
 func Healthcheck(g *gin.Context) {
 	g.JSON(http.StatusOK, "ok")
 }

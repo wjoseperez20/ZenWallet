@@ -10,6 +10,7 @@ CREATE TABLE files
     name       varchar(255)             NOT NULL,
     location   varchar(255)             NOT NULL,
     processed  boolean                  NOT NULL DEFAULT false,
+    output     varchar(255)             NOT NULL DEFAULT NULL,
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
     updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
     PRIMARY KEY (id)
