@@ -1,0 +1,282 @@
+definitions:
+  models.Account:
+    properties:
+      balance:
+        type: number
+      client:
+        type: string
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      number:
+        type: integer
+      updated_at:
+        type: string
+    type: object
+  models.CreateAccount:
+    properties:
+      client:
+        type: string
+      email:
+        type: string
+    required:
+    - client
+    - email
+    type: object
+  models.UpdateAccount:
+    properties:
+      client:
+        type: string
+      email:
+        type: string
+    type: object
+  models.User:
+    properties:
+      created_at:
+        type: string
+      password:
+        type: string
+      updated_at:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+info:
+  contact: {}
+paths:
+  /:
+    get:
+      consumes:
+      - application/json
+      description: do ping
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Healthcheck
+      tags:
+      - Healthcheck
+  /accounts:
+    get:
+      description: Get a list of all accounts with optional pagination
+      parameters:
+      - default: 0
+        description: Offset for pagination
+        in: query
+        name: offset
+        type: integer
+      - default: 10
+        description: Limit for pagination
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully retrieved list of accounts
+          schema:
+            items:
+              $ref: '#/definitions/models.Account'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: Get all accounts with pagination
+      tags:
+      - Accounts
+    post:
+      consumes:
+      - application/json
+      description: Create a new account with the given input data
+      parameters:
+      - description: Create account object
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateAccount'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Successfully created account
+          schema:
+            $ref: '#/definitions/models.Account'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      - JwtAuth: []
+      summary: Create a new account
+      tags:
+      - Accounts
+  /accounts/{id}:
+    delete:
+      description: Delete the account with the given ID
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Successfully deleted account
+          schema:
+            type: string
+        "404":
+          description: account not found
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Delete an account by ID
+      tags:
+      - Accounts
+    get:
+      description: Get details of an account by its ID
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully retrieved account
+          schema:
+            $ref: '#/definitions/models.Account'
+        "404":
+          description: Account not found
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Find an account by ID
+      tags:
+      - Accounts
+    put:
+      consumes:
+      - application/json
+      description: Update the account details for the given ID
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Update account object
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateAccount'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully updated account
+          schema:
+            $ref: '#/definitions/models.Account'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: account not found
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Update an account by ID
+      tags:
+      - Accounts
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticates a user using username and password, returns a JWT
+        token if successful
+      parameters:
+      - description: User login object
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: JWT Token
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Authenticate a user
+      tags:
+      - User
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Registers a new user with the given username and password
+      parameters:
+      - description: User registration object
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully registered
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Register a new user
+      tags:
+      - User
+swagger: "2.0"
