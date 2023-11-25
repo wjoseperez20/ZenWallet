@@ -1,6 +1,8 @@
 definitions:
   models.Account:
     properties:
+      account:
+        type: integer
       balance:
         type: number
       client:
@@ -10,8 +12,6 @@ definitions:
       email:
         type: string
       id:
-        type: integer
-      number:
         type: integer
       updated_at:
         type: string
@@ -52,7 +52,7 @@ definitions:
       output:
         type: string
       processed:
-        type: integer
+        type: boolean
       updated_at:
         type: string
     type: object
@@ -201,7 +201,7 @@ paths:
       produces:
       - application/json
       responses:
-        "204":
+        "202":
           description: Successfully deleted account
           schema:
             $ref: '#/definitions/models.Account'
@@ -529,7 +529,7 @@ paths:
       produces:
       - application/json
       responses:
-        "204":
+        "202":
           description: Successfully deleted transaction
           schema:
             $ref: '#/definitions/models.Transaction'

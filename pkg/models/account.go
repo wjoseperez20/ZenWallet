@@ -6,7 +6,7 @@ type Account struct {
 	ID        uint      `json:"id" gorm:"type:integer;autoIncrement:true"`
 	Client    string    `json:"client"`
 	Email     string    `json:"email" gorm:"uniqueIndex"`
-	Number    uint      `json:"number"  gorm:"primary_key"`
+	Account   uint      `json:"account"  gorm:"primary_key"`
 	Balance   float32   `json:"balance" sql:"type:decimal(10,2);"`
 	CreatedAt time.Time `json:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt time.Time `json:"updated_at" gorm:"autoUpdateTime"`

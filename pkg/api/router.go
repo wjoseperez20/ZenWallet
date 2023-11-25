@@ -40,8 +40,8 @@ func InitRouter() *gin.Engine {
 			account.GET("/", middleware.JWTAuth(), accounts.FindAccounts)
 			account.GET("/:id", middleware.JWTAuth(), accounts.FindAccount)
 			account.POST("/", middleware.JWTAuth(), accounts.CreateAccount)
-			account.PUT(":id", middleware.JWTAuth(), accounts.UpdateAccount)
-			account.DELETE(":id", middleware.JWTAuth(), accounts.DeleteAccount)
+			account.PUT("/:id", middleware.JWTAuth(), accounts.UpdateAccount)
+			account.DELETE("/:id", middleware.JWTAuth(), accounts.DeleteAccount)
 		}
 
 		transaction := v1.Group("/transactions")
@@ -49,8 +49,8 @@ func InitRouter() *gin.Engine {
 			transaction.GET("/", middleware.JWTAuth(), transactions.FindTransactions)
 			transaction.GET("/:id", middleware.JWTAuth(), transactions.FindTransaction)
 			transaction.POST("/", middleware.JWTAuth(), transactions.CreateTransaction)
-			transaction.PUT(":id", middleware.JWTAuth(), transactions.UpdateTransaction)
-			transaction.DELETE(":id", middleware.JWTAuth(), transactions.DeleteTransaction)
+			transaction.PUT("/:id", middleware.JWTAuth(), transactions.UpdateTransaction)
+			transaction.DELETE("/:id", middleware.JWTAuth(), transactions.DeleteTransaction)
 		}
 
 		file := v1.Group("/files")

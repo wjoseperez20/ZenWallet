@@ -82,7 +82,6 @@ func FindAccounts(c *gin.Context) {
 	}
 
 	// If cache missed, fetch data from the database
-
 	database.DB.Offset(offset).Limit(limit).Find(&accounts)
 
 	// Serialize accounts object and store it in Redis
@@ -176,7 +175,7 @@ func UpdateAccount(c *gin.Context) {
 // @Security JwtAuth
 // @Produce json
 // @Param id path string true "Account ID"
-// @Success 204 {object} models.Account "Successfully deleted account"
+// @Success 202 {object} models.Account "Successfully deleted account"
 // @Failure 404 {string} string "account not found"
 // @Router /accounts/{id} [delete]
 func DeleteAccount(c *gin.Context) {
@@ -189,5 +188,5 @@ func DeleteAccount(c *gin.Context) {
 
 	database.DB.Delete(&account)
 
-	c.JSON(http.StatusNoContent, account)
+	c.JSON(http.StatusAccepted, account)
 }

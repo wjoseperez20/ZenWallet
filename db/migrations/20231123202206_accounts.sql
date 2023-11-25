@@ -15,11 +15,11 @@ CREATE TABLE accounts
     id         integer                  NOT NULL DEFAULT nextval('seq_accounts_id'),
     client     varchar(255),
     email      varchar(255)             NOT NULL UNIQUE,
-    number     integer                  NOT NULL DEFAULT nextval('seq_accounts_number') UNIQUE,
+    account    integer                  NOT NULL DEFAULT nextval('seq_accounts_number') UNIQUE,
     balance    DECIMAL(10, 2)                    DEFAULT 0.0,
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
     updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
-    PRIMARY KEY (number)
+    PRIMARY KEY (account)
 );
 
 -- migrate:down

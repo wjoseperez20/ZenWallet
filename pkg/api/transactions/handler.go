@@ -82,7 +82,6 @@ func FindTransactions(c *gin.Context) {
 	}
 
 	// If cache missed, fetch data from the database
-
 	database.DB.Offset(offset).Limit(limit).Find(&transactions)
 
 	// Serialize transactions object and store it in Redis
@@ -166,7 +165,9 @@ func UpdateTransaction(c *gin.Context) {
 		return
 	}
 
-	database.DB.Model(&transaction).Updates(models.Transaction{Account: input.Account, Date: input.Date, Amount: input.Amount})
+	date, _ := time.Parse("2006-01-02", input.Date)
+
+	database.DB.Model(&transaction).Updates(models.Transaction{Account: input.Account, Date: date, Amount: input.Amount})
 
 	c.JSON(http.StatusOK, transaction)
 }
@@ -178,7 +179,7 @@ func UpdateTransaction(c *gin.Context) {
 // @Security JwtAuth
 // @Produce json
 // @Param id path string true "Transaction ID"
-// @Success 204 {object} models.Transaction "Successfully deleted transaction"
+// @Success 202 {object} models.Transaction "Successfully deleted transaction"
 // @Failure 404 {string} string "transaction not found"
 // @Router /transactions/{id} [delete]
 func DeleteTransaction(c *gin.Context) {
@@ -191,5 +192,5 @@ func DeleteTransaction(c *gin.Context) {
 
 	database.DB.Delete(&transaction)
 
-	c.JSON(http.StatusNoContent, transaction)
+	c.JSON(http.StatusAccepted, transaction)
 }

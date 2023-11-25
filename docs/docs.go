@@ -250,7 +250,7 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "204": {
+                    "202": {
                         "description": "Successfully deleted account",
                         "schema": {
                             "$ref": "#/definitions/models.Account"
@@ -771,7 +771,7 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "204": {
+                    "202": {
                         "description": "Successfully deleted transaction",
                         "schema": {
                             "$ref": "#/definitions/models.Transaction"
@@ -791,6 +791,9 @@ const docTemplate = `{
         "models.Account": {
             "type": "object",
             "properties": {
+                "account": {
+                    "type": "integer"
+                },
                 "balance": {
                     "type": "number"
                 },
@@ -804,9 +807,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "id": {
-                    "type": "integer"
-                },
-                "number": {
                     "type": "integer"
                 },
                 "updated_at": {
@@ -867,7 +867,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "processed": {
-                    "type": "integer"
+                    "type": "boolean"
                 },
                 "updated_at": {
                     "type": "string"
