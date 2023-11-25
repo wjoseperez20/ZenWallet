@@ -6,7 +6,7 @@ type Transaction struct {
 	ID        uint      `json:"id" gorm:"type:integer;primary_key;autoIncrement:true"`
 	Amount    float32   `json:"amount" sql:"type:decimal(10,2);"`
 	Date      time.Time `json:"date"`
-	Account   uint      `json:"account" gorm:"type:integer;column:account_id;references:account"`
+	Account   uint      `json:"account" gorm:"type:integer;column:account_id;references:accounts(account)"`
 	CreatedAt time.Time `json:"created_at" gorm:"autoCreateTime"`
 	UpdatedAt time.Time `json:"updated_at" gorm:"autoUpdateTime"`
 }

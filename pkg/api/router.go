@@ -38,10 +38,10 @@ func InitRouter() *gin.Engine {
 		account := v1.Group("/accounts")
 		{
 			account.GET("/", middleware.JWTAuth(), accounts.FindAccounts)
-			account.GET("/:id", middleware.JWTAuth(), accounts.FindAccount)
+			account.GET("/:account", middleware.JWTAuth(), accounts.FindAccount)
 			account.POST("/", middleware.JWTAuth(), accounts.CreateAccount)
-			account.PUT("/:id", middleware.JWTAuth(), accounts.UpdateAccount)
-			account.DELETE("/:id", middleware.JWTAuth(), accounts.DeleteAccount)
+			account.PUT("/:account", middleware.JWTAuth(), accounts.UpdateAccount)
+			account.DELETE("/:account", middleware.JWTAuth(), accounts.DeleteAccount)
 		}
 
 		transaction := v1.Group("/transactions")

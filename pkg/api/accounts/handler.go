@@ -28,7 +28,7 @@ import (
 func FindAccount(c *gin.Context) {
 	var account models.Account
 
-	if err := database.DB.Where("id = ?", c.Param("id")).First(&account).Error; err != nil {
+	if err := database.DB.Where("account = ?", c.Param("account")).First(&account).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "account not found"})
 		return
 	}
@@ -153,7 +153,7 @@ func UpdateAccount(c *gin.Context) {
 	var account models.Account
 	var input models.UpdateAccount
 
-	if err := database.DB.Where("id = ?", c.Param("id")).First(&account).Error; err != nil {
+	if err := database.DB.Where("account = ?", c.Param("account")).First(&account).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "account not found"})
 		return
 	}
@@ -181,7 +181,7 @@ func UpdateAccount(c *gin.Context) {
 func DeleteAccount(c *gin.Context) {
 	var account models.Account
 
-	if err := database.DB.Where("id = ?", c.Param("id")).First(&account).Error; err != nil {
+	if err := database.DB.Where("account = ?", c.Param("account")).First(&account).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "account not found"})
 		return
 	}

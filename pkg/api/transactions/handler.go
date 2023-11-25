@@ -135,6 +135,9 @@ func CreateTransaction(c *gin.Context) {
 		}
 	}
 
+	// Update account balance
+	updateAccountBalance(input.Account, input.Amount)
+
 	c.JSON(http.StatusCreated, transaction)
 }
 
@@ -169,6 +172,9 @@ func UpdateTransaction(c *gin.Context) {
 
 	database.DB.Model(&transaction).Updates(models.Transaction{Account: input.Account, Date: date, Amount: input.Amount})
 
+	// Update account balance
+	updateAccountBalance(input.Account, input.Amount)
+
 	c.JSON(http.StatusOK, transaction)
 }
 
@@ -193,4 +199,16 @@ func DeleteTransaction(c *gin.Context) {
 	database.DB.Delete(&transaction)
 
 	c.JSON(http.StatusAccepted, transaction)
+}
+
+// updateAccountBalance updates the balance of the given account
+// by adding the given amount to the current balance
+// @param Account number
+// @param Amount to add to the balance
+func updateAccountBalance(account uint, amount float32) {
+	var accountToUpdate models.Account
+
+	database.DB.Where("account = ?", account).First(&accountToUpdate)
+	accountToUpdate.Balance = accountToUpdate.Balance + amount
+	database.DB.Save(&accountToUpdate)
 }
