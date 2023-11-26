@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Account Statement</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            color: #3366cc;
+        }
+
+        p {
+            color: #333;
+        }
+
+        .statement {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+
+        .transaction {
+            margin-bottom: 10px;
+        }
+
+        .date {
+            color: #555;
+        }
+
+        .amount {
+            font-weight: bold;
+            color: #2c7738;
+        }
+
+        .logo {
+            max-width: 100px;
+            max-height: 100px;
+        }
+    </style>
+</head>
+<body>
+<img src="https://upload.wikimedia.org/wikipedia/commons/e/e3/Stori_logo_vertical.png" alt="Logo" class="logo">
+
+<h1>Hello, {{.Username}}!</h1>
+<p>{{.Message}}</p>
+
+<div class="statement">
+    <h2>Account Statement</h2>
+    {{range .Transactions}}
+    <div class="transaction">
+        <p class="date">{{.Date}}</p>
+        <p>{{.Account}}</p>
+        <p class="amount">{{.Amount}}</p>
+    </div>
+    {{end}}
+</div>
+</body>
+</html>

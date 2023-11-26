@@ -34,10 +34,10 @@ func TestFindAccount_SuccessfulRequest(t *testing.T) {
 
 	dbMock, gormDB := setupTestDatabase(t)
 	database.DB = gormDB
-	mockAccount := models.Account{ID: 10001, Client: "test", Email: "test@email.com", Account: 10001, Balance: 1.0, CreatedAt: parseTime, UpdatedAt: parseTime}
+	mockAccount := models.Account{ID: 10001, Client: "test", Email: "test@emails.com", Account: 10001, Balance: 1.0, CreatedAt: parseTime, UpdatedAt: parseTime}
 	dbMock.ExpectQuery(`SELECT \* FROM "accounts" WHERE account = (.+) ORDER BY "accounts"."account" LIMIT 1`).
 		WithArgs("10001").
-		WillReturnRows(sqlmock.NewRows([]string{"id", "client", "email", "account", "balance", "created_at", "updated_at"}).
+		WillReturnRows(sqlmock.NewRows([]string{"id", "client", "emails", "account", "balance", "created_at", "updated_at"}).
 			AddRow(mockAccount.ID, mockAccount.Client, mockAccount.Email, mockAccount.Account, mockAccount.Balance, mockAccount.CreatedAt, mockAccount.UpdatedAt))
 
 	// When
@@ -91,17 +91,17 @@ func TestUpdateAccount_SuccessfulRequest(t *testing.T) {
 
 	incomingAccount := models.Account{
 		Client: "test_update",
-		Email:  "test_update@email.com",
+		Email:  "test_update@emails.com",
 	}
 
 	dbMock, gormDB := setupTestDatabase(t)
 	database.DB = gormDB
 
-	mockAccount := models.Account{ID: 1, Client: "test", Email: "test@email.com", Account: 10001, Balance: 1.0, UpdatedAt: parseTime}
+	mockAccount := models.Account{ID: 1, Client: "test", Email: "test@emails.com", Account: 10001, Balance: 1.0, UpdatedAt: parseTime}
 
 	dbMock.ExpectQuery(`SELECT \* FROM "accounts" WHERE account = (.+) ORDER BY "accounts"."account" LIMIT 1`).
 		WithArgs("10001").
-		WillReturnRows(sqlmock.NewRows([]string{"id", "client", "email", "account", "balance", "created_at", "updated_at"}).
+		WillReturnRows(sqlmock.NewRows([]string{"id", "client", "emails", "account", "balance", "created_at", "updated_at"}).
 			AddRow(mockAccount.ID, mockAccount.Client, mockAccount.Email, mockAccount.Account, mockAccount.Balance, parseTime, parseTime))
 
 	dbMock.ExpectBegin()
@@ -135,7 +135,7 @@ func TestUpdateAccount_NotFound(t *testing.T) {
 
 	incomingAccount := models.Account{
 		Client: "notExist",
-		Email:  "not.exists@email.com",
+		Email:  "not.exists@emails.com",
 	}
 
 	dbMock, gormDB := setupTestDatabase(t)
@@ -167,11 +167,11 @@ func TestDeleteAccount_SuccessfulRequest(t *testing.T) {
 
 	dbMock, gormDB := setupTestDatabase(t)
 	database.DB = gormDB
-	mockAccount := models.Account{ID: 1, Client: "test", Email: "test@email.com", Account: 10001, Balance: 1.0, CreatedAt: parseTime, UpdatedAt: parseTime}
+	mockAccount := models.Account{ID: 1, Client: "test", Email: "test@emails.com", Account: 10001, Balance: 1.0, CreatedAt: parseTime, UpdatedAt: parseTime}
 
 	dbMock.ExpectQuery(`SELECT \* FROM "accounts" WHERE account = (.+) ORDER BY "accounts"."account" LIMIT 1`).
 		WithArgs("10001").
-		WillReturnRows(sqlmock.NewRows([]string{"id", "client", "email", "account", "balance", "created_at", "updated_at"}).
+		WillReturnRows(sqlmock.NewRows([]string{"id", "client", "emails", "account", "balance", "created_at", "updated_at"}).
 			AddRow(mockAccount.ID, mockAccount.Client, mockAccount.Email, mockAccount.Account, mockAccount.Balance, mockAccount.CreatedAt, mockAccount.UpdatedAt))
 
 	dbMock.ExpectBegin()

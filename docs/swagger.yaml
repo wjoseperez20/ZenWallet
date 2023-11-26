@@ -9,7 +9,7 @@ definitions:
         type: string
       created_at:
         type: string
-      email:
+      emails:
         type: string
       id:
         type: integer
@@ -20,11 +20,11 @@ definitions:
     properties:
       client:
         type: string
-      email:
+      emails:
         type: string
     required:
     - client
-    - email
+    - emails
     type: object
   models.CreateTransaction:
     properties:
@@ -56,6 +56,16 @@ definitions:
       updated_at:
         type: string
     type: object
+  models.LoginUser:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
   models.Transaction:
     properties:
       account:
@@ -75,7 +85,7 @@ definitions:
     properties:
       client:
         type: string
-      email:
+      emails:
         type: string
     type: object
   models.UpdateTransaction:
@@ -97,20 +107,6 @@ definitions:
         type: string
     required:
     - name
-    type: object
-  models.User:
-    properties:
-      created_at:
-        type: string
-      password:
-        type: string
-      updated_at:
-        type: string
-      username:
-        type: string
-    required:
-    - password
-    - username
     type: object
 info:
   contact: {}
@@ -274,21 +270,7 @@ paths:
       summary: Update an account by ID
       tags:
       - Accounts
-  /emails:
-    post:
-      consumes:
-      - application/json
-      responses:
-        "200":
-          description: Emails sent successfully
-          schema:
-            type: string
-      security:
-      - JWTAuth: []
-      summary: Send account to All accounts
-      tags:
-      - Emails
-  /emails/{email}:
+  /emails/{emails}:
     post:
       consumes:
       - application/json
@@ -401,7 +383,7 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/models.User'
+          $ref: '#/definitions/models.LoginUser'
       produces:
       - application/json
       responses:
@@ -437,7 +419,7 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/models.User'
+          $ref: '#/definitions/models.LoginUser'
       produces:
       - application/json
       responses:

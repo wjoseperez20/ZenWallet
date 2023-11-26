@@ -21,14 +21,14 @@ import (
 // @Security ApiKeyAuth
 // @Accept  json
 // @Produce  json
-// @Param   user     body    models.User     true        "User login object"
+// @Param   user     body    models.LoginUser     true        "User login object"
 // @Success 200 {string} string "JWT Token"
 // @Failure 400 {string} string "Bad Request"
 // @Failure 401 {string} string "Unauthorized"
 // @Failure 500 {string} string "Internal Server Error"
 // @Router /login [post]
 func LoginUser(c *gin.Context) {
-	var incomingUser models.User
+	var incomingUser models.LoginUser
 	var dbUser models.User
 
 	// Get JSON body
@@ -72,13 +72,13 @@ func LoginUser(c *gin.Context) {
 // @Security ApiKeyAuth
 // @Accept  json
 // @Produce  json
-// @Param   user     body    models.User     true        "User registration object"
+// @Param   user     body    models.LoginUser     true        "User registration object"
 // @Success 200 {string} string	"Successfully registered"
 // @Failure 400 {string} string "Bad Request"
 // @Failure 500 {string} string "Internal Server Error"
 // @Router /register [post]
 func RegisterUser(c *gin.Context) {
-	var internalUser models.User
+	var internalUser models.LoginUser
 
 	if err := c.ShouldBindJSON(&internalUser); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

@@ -265,31 +265,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/emails": {
-            "post": {
-                "security": [
-                    {
-                        "JWTAuth": []
-                    }
-                ],
-                "consumes": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Emails"
-                ],
-                "summary": "Send account to All accounts",
-                "responses": {
-                    "200": {
-                        "description": "Emails sent successfully",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/emails/{email}": {
+        "/emails/{emails}": {
             "post": {
                 "security": [
                     {
@@ -476,7 +452,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.User"
+                            "$ref": "#/definitions/models.LoginUser"
                         }
                     }
                 ],
@@ -533,7 +509,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.User"
+                            "$ref": "#/definitions/models.LoginUser"
                         }
                     }
                 ],
@@ -803,7 +779,7 @@ const docTemplate = `{
                 "created_at": {
                     "type": "string"
                 },
-                "email": {
+                "emails": {
                     "type": "string"
                 },
                 "id": {
@@ -818,13 +794,13 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "client",
-                "email"
+                "emails"
             ],
             "properties": {
                 "client": {
                     "type": "string"
                 },
-                "email": {
+                "emails": {
                     "type": "string"
                 }
             }
@@ -874,6 +850,21 @@ const docTemplate = `{
                 }
             }
         },
+        "models.LoginUser": {
+            "type": "object",
+            "required": [
+                "password",
+                "username"
+            ],
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
         "models.Transaction": {
             "type": "object",
             "properties": {
@@ -903,7 +894,7 @@ const docTemplate = `{
                 "client": {
                     "type": "string"
                 },
-                "email": {
+                "emails": {
                     "type": "string"
                 }
             }
@@ -934,27 +925,6 @@ const docTemplate = `{
             ],
             "properties": {
                 "name": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.User": {
-            "type": "object",
-            "required": [
-                "password",
-                "username"
-            ],
-            "properties": {
-                "created_at": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
-                },
-                "updated_at": {
-                    "type": "string"
-                },
-                "username": {
                     "type": "string"
                 }
             }
