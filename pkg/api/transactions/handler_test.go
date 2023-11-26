@@ -1,7 +1,6 @@
 package transactions
 
 import (
-	"bytes"
 	"encoding/json"
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/gin-gonic/gin"
@@ -65,12 +64,9 @@ func TestFindTransaction_NotFound(t *testing.T) {
 	w := performRequest(r, "GET", "/transactions/999")
 	assert.Equal(t, http.StatusNotFound, w.Code)
 
-	var errorResponse map[string]interface{}
-	err := json.Unmarshal(w.Body.Bytes(), &errorResponse)
-
 	// Then
-	assert.NoError(t, err)
-	assert.Equal(t, "transaction not found", errorResponse["error"])
+	expected := `{"error":"transaction not found"}`
+	assert.Equal(t, expected, w.Body.String())
 }
 
 // setupTestDatabase sets up a mock database for testing.
@@ -88,15 +84,11 @@ func setupTestDatabase(t *testing.T) (sqlmock.Sqlmock, *gorm.DB) {
 	return dbMock, gormDB
 }
 
-func performRequest(router *gin.Engine, method, path string, requestBody ...[]byte) *httptest.ResponseRecorder {
-	var reqBody []byte
-	if len(requestBody) > 0 {
-		reqBody = requestBody[0]
-	}
-
+// performRequest performs an HTTP request and returns the response recorder.
+func performRequest(r http.Handler, method, path string) *httptest.ResponseRecorder {
+	req, _ := http.NewRequest(method, path, nil)
 	w := httptest.NewRecorder()
-	req, _ := http.NewRequest(method, path, bytes.NewBuffer(reqBody))
-	req.Header.Set("Content-Type", "application/json")
-	router.ServeHTTP(w, req)
+	r.ServeHTTP(w, req)
+
 	return w
 }

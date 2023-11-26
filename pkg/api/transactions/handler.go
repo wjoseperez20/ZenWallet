@@ -203,8 +203,7 @@ func DeleteTransaction(c *gin.Context) {
 
 // updateAccountBalance updates the balance of the given account
 // by adding the given amount to the current balance
-// @param Account number
-// @param Amount to add to the balance
+// Private function, not exposed to the API
 func updateAccountBalance(account uint, amount float32) {
 	var accountToUpdate models.Account
 
