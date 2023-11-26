@@ -1,9 +1,11 @@
 package main
 
 import (
+	"github.com/wjoseperez20/zenwallet/pkg/amazon"
 	"github.com/wjoseperez20/zenwallet/pkg/api"
 	"github.com/wjoseperez20/zenwallet/pkg/cache"
 	"github.com/wjoseperez20/zenwallet/pkg/database"
+	"github.com/wjoseperez20/zenwallet/pkg/gmail"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -12,6 +14,8 @@ import (
 func main() {
 	cache.InitRedis()
 	database.ConnectDatabase()
+	amazon.ConnectAWS()
+	gmail.ConnectGmail()
 
 	//gin.SetMode(gin.ReleaseMode)
 	gin.SetMode(gin.DebugMode)

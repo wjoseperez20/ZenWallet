@@ -2,14 +2,24 @@ package files
 
 import (
 	"encoding/json"
+	"fmt"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/gin-gonic/gin"
+	"github.com/wjoseperez20/zenwallet/pkg/amazon"
 	"github.com/wjoseperez20/zenwallet/pkg/cache"
 	"github.com/wjoseperez20/zenwallet/pkg/database"
 	"github.com/wjoseperez20/zenwallet/pkg/models"
 	"log"
+	"mime/multipart"
 	"net/http"
 	"strconv"
 	"time"
+)
+
+const (
+	s3Bucket       = "zenwallet-bucket"
+	s3BucketFolder = "files"
 )
 
 // @BasePath /api/v1
@@ -114,25 +124,44 @@ func FindFiles(c *gin.Context) {
 // @Failure 401 {string} string "Unauthorized"
 // @Router /files [post]
 func UploadFile(c *gin.Context) {
-	var input models.UploadFile
 
-	if err := c.ShouldBindJSON(&input); err != nil {
+	file, header, err := c.Request.FormFile("file")
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	defer file.Close()
 
-	file := models.File{Name: input.Name}
+	// Create an S3 client
+	svc := s3.New(amazon.Aws)
 
-	database.DB.Create(&file)
+	// Generate a unique file name
+	fileName := header.Filename
 
-	// Invalidate cache
-	keysPattern := "files_offset_*"
-	keys, err := cache.Rdb.Keys(cache.Ctx, keysPattern).Result()
-	if err == nil {
-		for _, key := range keys {
-			cache.Rdb.Del(cache.Ctx, key)
-		}
+	// Upload the file to S3
+	err = uploadToS3(svc, file, fileName)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 
-	c.JSON(http.StatusCreated, file)
+	c.JSON(http.StatusOK, gin.H{"message": "File uploaded successfully"})
+}
+
+func uploadToS3(svc *s3.S3, file multipart.File, fileName string) error {
+	// Set up the S3 upload parameters
+	params := &s3.PutObjectInput{
+		Bucket: aws.String(s3Bucket),
+		Key:    aws.String(fmt.Sprintf("%s/%s", s3BucketFolder, fileName)),
+		Body:   file,
+	}
+
+	// Perform the upload
+	response, err := svc.PutObject(params)
+	if err != nil {
+		return err
+	}
+
+	log.Println(response)
+	return err
 }

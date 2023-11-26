@@ -3,7 +3,7 @@ package api
 import (
 	"github.com/wjoseperez20/zenwallet/docs"
 	"github.com/wjoseperez20/zenwallet/pkg/api/accounts"
-	emails "github.com/wjoseperez20/zenwallet/pkg/api/emails"
+	"github.com/wjoseperez20/zenwallet/pkg/api/emails"
 	"github.com/wjoseperez20/zenwallet/pkg/api/files"
 	"github.com/wjoseperez20/zenwallet/pkg/api/healtcheck"
 	"github.com/wjoseperez20/zenwallet/pkg/api/transactions"
@@ -62,7 +62,7 @@ func InitRouter() *gin.Engine {
 
 		email := v1.Group("/emails")
 		{
-			email.POST("/", middleware.JWTAuth(), emails.AccountStatementEmail)
+			email.POST("/", middleware.JWTAuth(), emails.SendAccountStatementEmail)
 		}
 	}
 
