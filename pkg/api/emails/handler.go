@@ -4,14 +4,12 @@ import (
 	"bytes"
 	"github.com/gin-gonic/gin"
 	"github.com/wjoseperez20/zenwallet/pkg/gmail"
-	"github.com/wjoseperez20/zenwallet/pkg/models"
 	"gopkg.in/gomail.v2"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
 	"path/filepath"
-	"time"
 )
 
 // @BasePath /api/v1
@@ -27,14 +25,8 @@ import (
 func SendAccountStatementEmail(c *gin.Context) {
 
 	username := "John Doe"
-	message := "This is a sample email message."
-	transactions := []models.Transaction{
-		{Date: time.Time{}, Account: 10001, Amount: -50.00},
-		{Date: time.Time{}, Account: 10001, Amount: -25.00},
-		// Add more transactions as needed
-	}
 
-	if err := sendEmail(username, message, transactions); err != nil {
+	if err := sendEmail(username); err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Failed to send email"})
 		return
 	}
@@ -43,7 +35,7 @@ func SendAccountStatementEmail(c *gin.Context) {
 }
 
 // sendEmail sends an email with the account statement
-func sendEmail(username, message string, transaction []models.Transaction) error {
+func sendEmail(username string) error {
 
 	basePath, err := os.Getwd()
 	if err != nil {
@@ -59,10 +51,18 @@ func sendEmail(username, message string, transaction []models.Transaction) error
 	}
 
 	// Data for the emails template
-	accountStatementData := models.EmailTemplateData{
-		Username:     username,
-		Message:      message,
-		Transactions: transaction,
+	accountStatementData := map[string]interface{}{
+		"Username":      username,
+		"TotalBalance":  200.00,
+		"AverageDebit":  -206.00,
+		"DebitCount":    4,
+		"AverageCredit": 366.00,
+		"CreditCount":   12,
+		"TransactionCountByMonth": map[string]int{
+			"January 2023":  5,
+			"February 2023": 8,
+			"March 2023":    12,
+		},
 	}
 
 	m := gomail.NewMessage()

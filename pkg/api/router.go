@@ -55,9 +55,10 @@ func InitRouter() *gin.Engine {
 
 		file := v1.Group("/files")
 		{
-			file.GET("/", middleware.JWTAuth(), files.FindFiles)
 			file.GET("/:id", middleware.JWTAuth(), files.FindFile)
-			file.POST("/", middleware.JWTAuth(), files.UploadFile)
+			file.GET("/", middleware.JWTAuth(), files.FindFiles)
+			file.POST("/upload", middleware.JWTAuth(), files.UploadFile)
+			file.POST("/process", middleware.JWTAuth(), files.ProcessFile)
 		}
 
 		email := v1.Group("/emails")

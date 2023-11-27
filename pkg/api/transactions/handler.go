@@ -136,7 +136,7 @@ func CreateTransaction(c *gin.Context) {
 	}
 
 	// Update account balance
-	updateAccountBalance(input.Account, input.Amount)
+	updateAccountBalance(uint(input.Account), input.Amount)
 
 	c.JSON(http.StatusCreated, transaction)
 }
@@ -173,7 +173,7 @@ func UpdateTransaction(c *gin.Context) {
 	database.DB.Model(&transaction).Updates(models.Transaction{Account: input.Account, Date: date, Amount: input.Amount})
 
 	// Update account balance
-	updateAccountBalance(input.Account, input.Amount)
+	updateAccountBalance(uint(input.Account), input.Amount)
 
 	c.JSON(http.StatusOK, transaction)
 }

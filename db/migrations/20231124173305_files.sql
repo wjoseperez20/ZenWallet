@@ -7,7 +7,7 @@ CREATE SEQUENCE seq_files_id START WITH 1;
 CREATE TABLE files
 (
     id         integer                  NOT NULL DEFAULT nextval('seq_files_id'),
-    name       varchar(255)             NOT NULL,
+    name       varchar(255)             NOT NULL UNIQUE,
     location   varchar(255)             NOT NULL DEFAULT 'local',
     processed  boolean                  NOT NULL DEFAULT false,
     output     varchar(255)             NOT NULL DEFAULT NULL,

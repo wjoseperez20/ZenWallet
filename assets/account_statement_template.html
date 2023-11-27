@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Account Statement</title>
+    <title>Stori Account Summary</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -39,7 +39,7 @@
             line-height: 1.6;
         }
 
-        .statement {
+        .summary {
             margin-top: 30px;
             border-top: 1px solid #ddd;
             padding-top: 20px;
@@ -70,15 +70,21 @@
 <div class="container">
     <img src="https://upload.wikimedia.org/wikipedia/commons/e/e3/Stori_logo_vertical.png" alt="Logo" class="logo">
     <h1>Hello, {{.Username}}!</h1>
-    <p>{{.Message}}</p>
+    <p>Here is your zenwallet account summary:</p>
 
-    <div class="statement">
-        <h2>Account Statement</h2>
-        {{range .Transactions}}
+    <div class="summary">
+        <h2>Account Summary</h2>
+        <p>Total balance is ${{printf "%.2f" .TotalBalance}}</p>
+        <p>Average debit amount: ${{printf "%.2f" .AverageDebit}} (Number of transactions: {{.DebitCount}})</p>
+        <p>Average credit amount: ${{printf "%.2f" .AverageCredit}} (Number of transactions: {{.CreditCount}})</p>
+    </div>
+
+    <div class="transaction">
+        <h2>Transaction count by month:</h2>
+        {{range $month, $count := .TransactionCountByMonth}}
         <div class="transaction">
-            <p class="date">{{.Date}}</p>
-            <p>{{.Account}}</p>
-            <p class="amount">{{.Amount}}</p>
+            <p class="date">{{$month}}:</p>
+            <p>{{$count}} transactions</p>
         </div>
         {{end}}
     </div>

@@ -66,6 +66,13 @@ definitions:
     - password
     - username
     type: object
+  models.ProcessFile:
+    properties:
+      name:
+        type: string
+    required:
+    - name
+    type: object
   models.Transaction:
     properties:
       account:
@@ -314,6 +321,65 @@ paths:
       summary: Get all files with pagination
       tags:
       - Files
+  /files/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get details of a file by its ID
+      parameters:
+      - description: File ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully retrieved file
+          schema:
+            $ref: '#/definitions/models.File'
+        "404":
+          description: File not found
+          schema:
+            type: string
+      security:
+      - JwtAuth: []
+      summary: Find file by ID
+      tags:
+      - Files
+  /files/process:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Upload file
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.ProcessFile'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Successfully processed file
+          schema:
+            $ref: '#/definitions/models.File'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+      security:
+      - JwtAuth: []
+      summary: Process a file
+      tags:
+      - Files
+  /files/upload:
     post:
       consumes:
       - application/json
@@ -342,33 +408,6 @@ paths:
       security:
       - JwtAuth: []
       summary: Upload a new file
-      tags:
-      - Files
-  /files/{id}:
-    get:
-      consumes:
-      - application/json
-      description: Get details of a file by its ID
-      parameters:
-      - description: File ID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Successfully retrieved file
-          schema:
-            $ref: '#/definitions/models.File'
-        "404":
-          description: File not found
-          schema:
-            type: string
-      security:
-      - JwtAuth: []
-      summary: Find file by ID
       tags:
       - Files
   /login:
