@@ -9,7 +9,7 @@ definitions:
         type: string
       created_at:
         type: string
-      emails:
+      email:
         type: string
       id:
         type: integer
@@ -20,11 +20,11 @@ definitions:
     properties:
       client:
         type: string
-      emails:
+      email:
         type: string
     required:
     - client
-    - emails
+    - email
     type: object
   models.CreateTransaction:
     properties:
@@ -92,7 +92,7 @@ definitions:
     properties:
       client:
         type: string
-      emails:
+      email:
         type: string
     type: object
   models.UpdateTransaction:

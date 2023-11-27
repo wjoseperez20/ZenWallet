@@ -820,7 +820,7 @@
                 "created_at": {
                     "type": "string"
                 },
-                "emails": {
+                "email": {
                     "type": "string"
                 },
                 "id": {
@@ -835,13 +835,13 @@
             "type": "object",
             "required": [
                 "client",
-                "emails"
+                "email"
             ],
             "properties": {
                 "client": {
                     "type": "string"
                 },
-                "emails": {
+                "email": {
                     "type": "string"
                 }
             }
@@ -946,7 +946,7 @@
                 "client": {
                     "type": "string"
                 },
-                "emails": {
+                "email": {
                     "type": "string"
                 }
             }

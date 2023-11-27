@@ -831,7 +831,7 @@ const docTemplate = `{
                 "created_at": {
                     "type": "string"
                 },
-                "emails": {
+                "email": {
                     "type": "string"
                 },
                 "id": {
@@ -846,13 +846,13 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "client",
-                "emails"
+                "email"
             ],
             "properties": {
                 "client": {
                     "type": "string"
                 },
-                "emails": {
+                "email": {
                     "type": "string"
                 }
             }
@@ -957,7 +957,7 @@ const docTemplate = `{
                 "client": {
                     "type": "string"
                 },
-                "emails": {
+                "email": {
                     "type": "string"
                 }
             }
