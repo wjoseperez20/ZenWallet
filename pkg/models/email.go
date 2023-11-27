@@ -1,9 +1,7 @@
 package models
 
 type Email struct {
-	Client  string
-	Email   string
-	Message string
+	Email string
 }
 
 type EmailTemplateData struct {

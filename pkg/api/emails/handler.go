@@ -3,7 +3,9 @@ package emails
 import (
 	"bytes"
 	"github.com/gin-gonic/gin"
+	"github.com/wjoseperez20/zenwallet/pkg/database"
 	"github.com/wjoseperez20/zenwallet/pkg/gmail"
+	"github.com/wjoseperez20/zenwallet/pkg/models"
 	"gopkg.in/gomail.v2"
 	"html/template"
 	"log"
@@ -23,10 +25,29 @@ import (
 // @Success 200 {string} string "Email sent successfully"
 // @Router /emails/{emails} [post]
 func SendAccountStatementEmail(c *gin.Context) {
+	var input models.Email
+	var account models.Account
+	var transactions []models.Transaction
 
-	username := "John Doe"
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
-	if err := sendEmail(username); err != nil {
+	// Get the account by email
+	if err := database.DB.Where("email = ?", input.Email).First(&account).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "email not found"})
+		return
+	}
+
+	// Get All transactions by account
+	if err := database.DB.Where("account_id = ?", account.Account).Find(&transactions).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "transactions not found"})
+		return
+	}
+
+	// Send the email
+	if err := sendEmail(account, transactions); err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Failed to send email"})
 		return
 	}
@@ -35,11 +56,30 @@ func SendAccountStatementEmail(c *gin.Context) {
 }
 
 // sendEmail sends an email with the account statement
-func sendEmail(username string) error {
+func sendEmail(account models.Account, transactions []models.Transaction) error {
 
 	basePath, err := os.Getwd()
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	// Calculate Statement Account
+	transactionsByMonth := make(map[string]int)
+	var totalDebit float32
+	var countDebit int
+	var totalCredit float32
+	var countCredit int
+	for _, transaction := range transactions {
+		month := transaction.CreatedAt.Format("January 2006")
+		transactionsByMonth[month]++
+
+		if transaction.Amount < 0 {
+			totalDebit += transaction.Amount
+			countDebit++
+		} else {
+			totalCredit += transaction.Amount
+			countCredit++
+		}
 	}
 
 	// Parse the HTML template
@@ -52,22 +92,18 @@ func sendEmail(username string) error {
 
 	// Data for the emails template
 	accountStatementData := map[string]interface{}{
-		"Username":      username,
-		"TotalBalance":  200.00,
-		"AverageDebit":  -206.00,
-		"DebitCount":    4,
-		"AverageCredit": 366.00,
-		"CreditCount":   12,
-		"TransactionCountByMonth": map[string]int{
-			"January 2023":  5,
-			"February 2023": 8,
-			"March 2023":    12,
-		},
+		"Username":                account.Client,
+		"TotalBalance":            account.Balance,
+		"AverageDebit":            totalDebit,
+		"DebitCount":              countDebit,
+		"AverageCredit":           totalCredit,
+		"CreditCount":             countCredit,
+		"TransactionCountByMonth": transactionsByMonth,
 	}
 
 	m := gomail.NewMessage()
 	m.SetHeader("From", "zenwallet.app@gmail.com")
-	m.SetHeader("To", "zenwallet.app@gmail.com")
+	m.SetHeader("To", account.Email)
 	m.SetHeader("Subject", "Account Statement")
 
 	// Render the template with the data

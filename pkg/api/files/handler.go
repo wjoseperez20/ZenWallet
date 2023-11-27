@@ -27,28 +27,6 @@ const (
 
 // @BasePath /api/v1
 
-// FindFile godoc
-// @Summary Find file by ID
-// @Description Get details of a file by its ID
-// @Tags Files
-// @Security JwtAuth
-// @Accept json
-// @Produce json
-// @Param id path string true "File ID"
-// @Success 200 {object} models.File "Successfully retrieved file"
-// @Failure 404 {string} string "File not found"
-// @Router /files/{id} [get]
-func FindFile(c *gin.Context) {
-	var file models.File
-
-	if err := database.DB.Where("id = ?", c.Param("id")).First(&file).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "account not found"})
-		return
-	}
-
-	c.JSON(http.StatusOK, file)
-}
-
 // FindFiles godoc
 // @Summary Get all files with pagination
 // @Description Get a list of all files with optional pagination
@@ -112,6 +90,28 @@ func FindFiles(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, files)
+}
+
+// FindFile godoc
+// @Summary Find file by ID
+// @Description Get details of a file by its ID
+// @Tags Files
+// @Security JwtAuth
+// @Accept json
+// @Produce json
+// @Param id path string true "File ID"
+// @Success 200 {object} models.File "Successfully retrieved file"
+// @Failure 404 {string} string "File not found"
+// @Router /files/{id} [get]
+func FindFile(c *gin.Context) {
+	var file models.File
+
+	if err := database.DB.Where("id = ?", c.Param("id")).First(&file).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "account not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, file)
 }
 
 // UploadFile godoc
