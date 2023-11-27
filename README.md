@@ -29,7 +29,13 @@ cd zenwallet
 3. Build and run the Docker containers
 
 ```bash
-make setup && make build && make up && make database
+make setup && make build && make up
+```
+
+4. Run Migrations and Seeds
+
+```bash
+make database
 ```
 
 ### Environment Variables
