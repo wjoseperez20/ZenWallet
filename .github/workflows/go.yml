@@ -22,8 +22,8 @@ jobs:
           go-version: '1.21.4'
 
       - name: Lint
-        run: go get -u golang.org/x/lint/golint
-      - run: golint -set_exit_status ./...
+        run: go get -u golang.org/x/lint/golangci-lint
+      - run: golangci-lint run ./...
 
       - name: Test
         run: go test -v ./...
