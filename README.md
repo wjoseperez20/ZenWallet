@@ -8,9 +8,9 @@ This app represents a tech challenge from Storicard. It is a RESTful API for acc
 
 ### Prerequisites
 
-- Go 1.21+
-- Docker
-- Docker Compose
+- [Go 1.21+](https://go.dev/doc/install)
+- [dbmate](https://github.com/amacneil/dbmate#installation)
+- [Docker + Docker compose](https://docs.docker.com/engine/install/)
 
 ### Installation
 
