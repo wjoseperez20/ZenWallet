@@ -70,7 +70,7 @@ func sendEmail(account models.Account, transactions []models.Transaction) error 
 	var totalCredit float32
 	var countCredit int
 	for _, transaction := range transactions {
-		month := transaction.CreatedAt.Format("January 2006")
+		month := transaction.Date.Format("January 2006")
 		transactionsByMonth[month]++
 
 		if transaction.Amount < 0 {
@@ -94,9 +94,9 @@ func sendEmail(account models.Account, transactions []models.Transaction) error 
 	accountStatementData := map[string]interface{}{
 		"Username":                account.Client,
 		"TotalBalance":            account.Balance,
-		"AverageDebit":            totalDebit,
+		"AverageDebit":            totalDebit / float32(countDebit),
 		"DebitCount":              countDebit,
-		"AverageCredit":           totalCredit,
+		"AverageCredit":           totalCredit / float32(countCredit),
 		"CreditCount":             countCredit,
 		"TransactionCountByMonth": transactionsByMonth,
 	}
