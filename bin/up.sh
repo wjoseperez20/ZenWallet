@@ -27,5 +27,3 @@ export DATABASE_URL="postgres://username:password@localhost:5432/zenwallet?sslmo
 dbmate wait && dbmate up && ([ -d "db/seeds" ] && dbmate --migrations-dir=db/seeds --migrations-table=seed_migrations up || true);
 
 echo " - Done!";
-
-docker-compose -f "${SCRIPT_DIR}"/docker-compose.yaml logs -f;
