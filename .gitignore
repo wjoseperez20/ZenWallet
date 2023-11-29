@@ -29,4 +29,5 @@ go.work
 build/
 main
 **/.DS_Store
-Run_Serverdocker-compose.yaml
+Run_Server
+docker-compose.yaml
