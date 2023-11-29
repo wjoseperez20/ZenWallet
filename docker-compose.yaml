@@ -1,0 +1,52 @@
+version: "1.0"
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+services:
+  api:
+    container_name: Zenwallet
+    build:
+      context: ../../../../../Downloads
+      dockerfile: Dockerfile
+    ports:
+      - 8001:8001
+    volumes:
+      - .data:/app/data
+    depends_on:
+      - database
+    environment:
+      POSTGRES_DB:
+      POSTGRES_HOST:
+      POSTGRES_USER:
+      POSTGRES_PASSWORD:
+      POSTGRES_PORT:
+      JWT_SECRET_KEY:
+      API_SECRET_KEY:
+      GMAIL_USER:
+      GMAIL_SECRET:
+      AWS_REGION:
+      AWS_ACCESS_KEY_ID:
+      AWS_SECRET_ACCESS_KEY:
+
+  database:
+    container_name: Postgres
+    image: postgres:14.1-alpine
+    environment:
+      POSTGRES_USER:
+      POSTGRES_PASSWORD:
+      POSTGRES_DB:
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  redis:
+    container_name: Redis
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/var/lib/redis/data
